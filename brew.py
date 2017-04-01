@@ -147,53 +147,31 @@ class Configuration(object):
 
 """)
             # Taps
-            if len(self.taps) > 0:
-                f.write("# Taps:\n")
-                for t in self.taps:
-                    f.write("tap '{}'\n".format(t))
-                f.write("\n")
-
+            self.print_packages(f, "Taps:", self.taps, self.tap)
             # Privileged Brews
-            if len(self.privileged_brews):
-                f.write("# Privileged Brews:\n")
-                for b in self.privileged_brews:
-                    f.write(self.brew(b))
-                f.write("\n")
-
+            self.print_packages(f, "Privileged Brews:", self.privileged_brews, self.brew)
             # Privileged Casks
-            if len(self.privileged_casks):
-                f.write("# Privileged Casks:\n")
-                for c in self.privileged_casks:
-                    f.write(self.cask(c))
-                f.write("\n")
-
+            self.print_packages(f, "Privileged Casks:", self.privileged_casks, self.cask)
             # Privileged Mas apps
-            if len(self.privileged_mas_apps):
-                f.write("# Privileged Mac App Store:\n")
-                for m in self.privileged_mas_apps:
-                    f.write(self.mas(m))
-                f.write("\n")
-
+            self.print_packages(f, "Privileged Mac App Store:", self.privileged_mas_apps, self.mas)
             # Brews
-            if len(self.brews):
-                f.write("# Brews:\n")
-                for b in self.brews:
-                    f.write(self.brew(b))
-                f.write("\n")
-
+            self.print_packages(f, "Brews:", self.brews, self.brew)
             # Casks
-            if len(self.casks):
-                f.write("# Casks:\n")
-                for c in self.casks:
-                    f.write(self.cask(c))
-                f.write("\n")
-
+            self.print_packages(f, "Casks:", self.casks, self.cask)
             # Mas apps
-            if len(self.mas_apps):
-                f.write("# Mac App Store:\n")
-                for m in self.mas_apps:
-                    f.write(self.mas(m))
-                f.write("\n")
+            self.print_packages(f, "Mac App Store:", self.mas_apps, self.mas)
+
+    @classmethod
+    def print_packages(cls, f, title, packages, print_method):
+        if len(packages):
+            f.write("# {}\n".format(title))
+            for element in packages:
+                f.write(print_method(element))
+            f.write("\n")
+
+    @classmethod
+    def tap(cls, t):
+        return "tap {}\n".format(cls.brewfile_value(t))
 
     @classmethod
     def brew(cls, b):
