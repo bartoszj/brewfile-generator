@@ -103,7 +103,7 @@ class Configuration(object):
     def brewfile_name(self):
         if self.name == "main":
             return "Brewfile"
-        return "Brewfile_{}".format(self.name)
+        return "{}.Brewfile".format(self.name)
 
     @property
     def taps(self):
@@ -140,7 +140,10 @@ class Configuration(object):
 # $ brew tap Homebrew/bundle
 # $ brew bundle
 # // or
-# $ brew bundle --file=Brewfile_<name>
+# $ brew bundle --file=<name>.Brewfile
+#
+# Tip:
+# $ sudo chmod -R +ai "group:admin allow list,add_file,search,delete,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,writesecurity,chown,file_inherit,directory_inherit" /usr/local/*
 
 """)
             # Taps
