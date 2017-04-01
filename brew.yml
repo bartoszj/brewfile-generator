@@ -1,0 +1,41 @@
+--- 
+configurations:
+  main:
+    - core
+  server:
+    - core
+    - server
+
+groups:
+  core:
+    taps:
+      - buo/cask-upgrade
+      - caskroom/cask
+      - facebook/fb
+      - homebrew/bundle
+      - homebrew/completions
+      - homebrew/fuse
+    privileged:
+      brews:
+        - mas
+      casks:
+        - java
+        - osxfuse
+        - xquartz
+    brews:
+      - swiftlint
+      - thefuck
+      - tmux
+      - wget
+      - xctool
+    casks:
+      - docker
+      - firefox
+  server:
+    brews:
+      - fbsimctl: {args: ['HEAD']}
+      - ffmpeg: {args: ['with-faac', 'with-fdk-aac', 'with-ffplay']}
+      - jenkins
+      - nginx
+    mas_apps:
+      - Server: {id: 883878097}

@@ -4,6 +4,7 @@
 import yaml
 import os.path
 import collections
+import argparse
 
 class Brew(object):
     def __init__(self, data):
@@ -107,31 +108,31 @@ class Configuration(object):
 
     @property
     def taps(self):
-        return unique_sort(sorted([tap for g in self.groups for tap in g.taps]))
+        return unique_sort([tap for g in self.groups for tap in g.taps])
 
     @property
     def brews(self):
-        return unique_sort(sorted([brew for g in self.groups for brew in g.brews]))
+        return unique_sort([brew for g in self.groups for brew in g.brews])
 
     @property
     def privileged_brews(self):
-        return unique_sort(sorted([brew for g in self.groups if g.privileged for brew in g.privileged.brews]))
+        return unique_sort([brew for g in self.groups if g.privileged for brew in g.privileged.brews])
         
     @property
     def casks(self):
-        return unique_sort(sorted([cask for g in self.groups for cask in g.casks]))
+        return unique_sort([cask for g in self.groups for cask in g.casks])
 
     @property
     def privileged_casks(self):
-        return unique_sort(sorted([cask for g in self.groups if g.privileged for cask in g.privileged.casks]))
+        return unique_sort([cask for g in self.groups if g.privileged for cask in g.privileged.casks])
     
     @property
     def mas_apps(self):
-        return unique_sort(sorted([mas_app for g in self.groups for mas_app in g.mas_apps]))
+        return unique_sort([mas_app for g in self.groups for mas_app in g.mas_apps])
 
     @property
     def privileged_mas_apps(self):
-        return unique_sort(sorted([mas_app for g in self.groups if g.privileged for mas_app in g.privileged.mas_apps]))
+        return unique_sort([mas_app for g in self.groups if g.privileged for mas_app in g.privileged.mas_apps])
 
     def generate(self):
         print("Generating: {}".format(self.name))
@@ -246,13 +247,23 @@ def unique_sort(seq):
     return sort(unique(seq))
 
 if __name__ == "__main__":
-    brew_file = None
-    if os.path.exists("brew.yml"):
-        brew_file = "brew.yml"
-    elif os.path.exists("brew.yaml"):
-        brew_file = "brew.yaml"
-    else:
-        exit(1)
+    def parse_file(file_name):
+        with open(file_name, "r") as f:
+            brew = Brew(yaml.load(f))
 
-    with open(brew_file, "r") as f:
-        brew = Brew(yaml.load(f))
+    parser = argparse.ArgumentParser(description="Generates Brewfiles from YAML template")
+    parser.add_argument("-f", "--file", help="YAML file to parse, by default `brew.yml` or `brew.yaml`")
+    args = parser.parse_args()
+
+    if args.file:
+        parse_file(args.file)
+    else:
+        brew_file = None
+        if os.path.exists("brew.yml"):
+            brew_file = "brew.yml"
+        elif os.path.exists("brew.yaml"):
+            brew_file = "brew.yaml"
+        else:
+            exit(1)
+
+        parse_file(brew_file)
